@@ -1,0 +1,45 @@
+Apache Kafka provides us with the following retention policies -
+
+1)Time based Retention
+
+log.retention.ms=1680000
+
+# Used if log.retention.ms is not set
+log.retention.minutes=1680
+
+# Used if log.retention.minutes is not set
+log.retention.hours=168
+
+kafka-topics.bat --zookeeper localhost:2181 --alter --topic my-topic --config retention.ms=1680000
+kafka-topics.bat --zookeeper localhost:2181 --alter --topic my-topic  --delete-config retention.ms
+
+Note:Topic level configuration will always override Broker level configurations.
+
+2)Size based Retention
+
+log.retention.bytes
+log.retention.bytes is a size-based retention policy for logs, i.e the allowed size of the topic. Segments are 
+pruned from the log as long as the remaining segments don't drop below log.retention.bytes.
+
+kafka-topics.bat --zookeeper localhost:2181 --alter --topic my-topic --config retention.bytes=104857600
+
+If required, it is possible to remove Topic level retention time configuration using below command -
+
+kafka-topics.bat --zookeeper localhost:2181 --alter --topic my-topic  --delete-config retention.byte
+
+
+====================================
+
+kafka-topics.bat --list --zookeeper localhost:2181  //list the topics
+kafka-console-producer.bat --broker-list localhost:9092 --topic test-topic  //to publish a message
+kafka-topics.bat --create --zookeeper localhost:2181 --topic test-topic --partitions 1 --replication-factor 1
+kafka-console-consumer.bat --zookeeper localhost:2181 --topic test-topic --from-beginning
+kafka-topics.bat --describe --zookeeper localhost:2181 --topic demo-topic
+kafka-topics.bat --zookeeper localhost:2181 --delete --topic remove-me
+
+You can list all groups as follows:
+kafka-consumer-groups --new-consumer --list --bootstrap-server localhost:9092
+
+Manually Create consumer groups:
+kafka-console-consumer --bootstrap-server localhost:9092 --topic some-topic --group SomeConsumerGroup
+
